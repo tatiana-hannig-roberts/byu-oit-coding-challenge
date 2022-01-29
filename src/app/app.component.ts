@@ -32,6 +32,7 @@ export class AppComponent {
 	quitGame = false;
 
 	resetBoard() {
+	  // resets the board and word currently being constructed
     this.chosenLetters = [];
     this.letters.forEach((letter) => {
       letter.used = false;
@@ -41,6 +42,7 @@ export class AppComponent {
 	}
 
 	getWords() {
+	  // start the game and retrieves words from the dictionary api and then selects one that fits the difficulty selected
     this.chosenLetters = [];
 	  this.submittedValidWords = [];
 	  this.submittedInvalidWords = [];
@@ -57,12 +59,14 @@ export class AppComponent {
 	}
 
 	scrambleWord() {
+	  // takes the selected word, splits the letters into an array and scrambles them
 	  this.letters = shuffle(this.word.split('')).map((letter, i) => {
       return { character: letter, index: i, used: false, active: false, hint: false };
     });
 	}
 
 	selectLetter(selectedLetter) {
+	  // runs when a letter is clicked
 	  if(!selectedLetter.used && !this.boardDisabled) {
 	    if(!selectedLetter.active) {
 	      this.letters.forEach((letter) => {
@@ -85,23 +89,33 @@ export class AppComponent {
 	}
 
 	isWordUsed() {
+	  // checks if the constructed word is already submitted and if so the submitted button is disabled
 	  return this.submittedValidWords.some((word) => word === this.convertToWord()) || this.submittedInvalidWords.some((word) => word === this.convertToWord());
 	}
 
 	sendHint() {
+	  // will hint a letter
 	  if(!this.chosenLetters.length || this.word.indexOf(this.convertToWord().charAt(0)) !== 0) {
       this.letters.find((letter) => this.word.indexOf(letter.character) === 0).hint = true;
+      if(this.chosenLetters.length) {
+        setTimeout(() => {
+          this.letters.find((letter) => this.word.indexOf(letter.character) === 0).hint = false;
+        }, 500)
+      }
 	  }
     if(this.chosenLetters.length && this.word.indexOf(this.convertToWord()) === 0 && this.word !== this.convertToWord()) {
+      console.log(1);
       this.letters.find((letter) => letter.character === this.word.charAt(this.chosenLetters.length) && !letter.used && !letter.active).hint = true;
     }
 	}
 
 	convertToWord() {
+	  // combines the selected letters into a word
 	  return this.chosenLetters.map((index) => this.letters.find((letter) => letter.index === index).character).join('');
 	}
 
 	submitWord() {
+	  // checks if the constructed word is the original word, and if it isn't will check via the api if the word is valid
 	  this.buttonsDisabled = true;
 	  if(this.convertToWord() === this.word) {
 	    this.submittedValidWords.push(this.convertToWord());
@@ -118,7 +132,6 @@ export class AppComponent {
         this.submittedValidWords.push(this.convertToWord());
         this.resetBoard();
         this.buttonsDisabled = false;
-
       }, (error) => {
         this.submittedInvalidWords.push(this.convertToWord());
         this.resetBoard();
@@ -128,6 +141,7 @@ export class AppComponent {
 	}
 
 	shutDown() {
+	  // hides the game and instructions and only shows thank you message
 	  console.log('got here');
 	  this.activeGame = false;
 	  this.wonGame = false;

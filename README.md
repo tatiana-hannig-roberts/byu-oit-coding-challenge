@@ -8,7 +8,7 @@ https://gitforwindows.org/
 ## Download and install node.js
 https://nodejs.org/en/download/
 
-## At the project root open git bash
+At the project root open git bash
 
 ## To install package modules run
 npm install
