@@ -1,0 +1,75 @@
+<div class="page">
+  <div class="content">
+    <div class="instructions" *ngIf="!activeGame && !quitGame">
+      <span class="title">ANAGRAMS</span>
+      <p>Welcome to this anagram game.  You will be given a set of letters and you'll need to assemble them into a word.
+        You will win if you guess the original word though you may submit a word without using all the letters to check if
+        the word is valid.  Click on the letters to assemble a word.  Select a difficulty to begin; it will determine the
+        length of the word you are trying to guess.  Good luck!
+      </p>
+      <ul>
+        <li>You may not submit the same word more than once</li>
+        <li>You cannot use a displayed letter more than once</li>
+        <li>You may click the last letter you selected to undo your choice</li>
+        <li>The hint button will reveal the first letter of the correct word and the subsequent letters if your guess is correct so far</li>
+        <li>Submitting a word could take a little time to respond</li>
+      </ul>
+    </div>
+
+    <div class="difficulty" *ngIf="!quitGame">
+      <select [(ngModel)]="chosenDifficulty">
+        <option *ngFor="let option of difficultyOptions" [value]="option.name">{{ option.name }}</option>
+      </select>
+      <button (click)="getWords()" [disabled]="(!chosenDifficulty || buttonsDisabled) && !wonGame">{{ startButtonText }}</button>
+    </div>
+
+
+    <div class="game-content" *ngIf="activeGame && !quitGame">
+      <div class="display-table">
+        <div class="letter-cell" *ngFor="let letter of letters" (click)="selectLetter(letter)"
+            [class.active]="letter.active && !letter.hint" [class.used]="letter.used && !letter.hint && !letter.active" [class.is-hint]="letter.hint">
+          {{ letter.character }}
+        </div>
+      </div>
+
+      <div class="word-construction">
+        <span *ngIf="!wonGame">{{ convertToWord(chosenLetters) ? convertToWord(chosenLetters) : '-----' }}</span>
+        <span *ngIf="wonGame">YOU WIN!</span>
+      </div>
+
+      <div class="button-bar">
+        <div class="reset">
+          <button (click)="resetBoard()" [disabled]="buttonsDisabled">Reset</button>
+        </div>
+        <div class="hint">
+          <button (click)="sendHint()" [disabled]="buttonsDisabled">Hint</button>
+        </div>
+        <div class="submit">
+          <button (click)="submitWord()" [disabled]="buttonsDisabled || isWordUsed()">Submit</button>
+        </div>
+      </div>
+
+      <div class="quit" *ngIf="wonGame">
+        <button (click)="shutDown()">Quit</button>
+      </div>
+
+      <div class="word-box">
+        <div class="word-list">
+          <div class="list-header">VALID WORDS</div>
+          <div class="list-content">
+            <span *ngFor="let word of submittedValidWords">{{ word }}</span>
+          </div>
+        </div>
+        <div class="word-list">
+          <div class="list-header">INVALID WORDS</div>
+          <div class="list-content">
+            <span *ngFor="let word of submittedInvalidWords">{{ word }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="quit-message" *ngIf="quitGame">
+    Thank you for playing!
+  </div>
+</div>
