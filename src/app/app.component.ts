@@ -47,7 +47,7 @@ export class AppComponent {
 	  this.submittedValidWords = [];
 	  this.submittedInvalidWords = [];
     const difficulty = this.difficultyOptions.find((option) => option.name === this.chosenDifficulty);
-		this.http.get('https://random-word-api.herokuapp.com/word?number=100').subscribe((response) => {
+		this.http.get('https://random-word-api.herokuapp.com/word?number=100').subscribe((response: any) => {
 		  this.wonGame = false;
 		  this.boardDisabled = false;
 		  this.word = response.find((word) => word.length >= difficulty.minLength && word.length <= difficulty.maxLength).toUpperCase();

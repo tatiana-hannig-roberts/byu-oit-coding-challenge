@@ -33,7 +33,7 @@
       </div>
 
       <div class="word-construction">
-        <span *ngIf="!wonGame">{{ convertToWord(chosenLetters) ? convertToWord(chosenLetters) : '-----' }}</span>
+        <span *ngIf="!wonGame">{{ convertToWord() ? convertToWord() : '-----' }}</span>
         <span *ngIf="wonGame">YOU WIN!</span>
       </div>
 
